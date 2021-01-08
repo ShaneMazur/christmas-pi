@@ -19,6 +19,7 @@ time.sleep(2.0)
 
 def update_frame():
     global curr_frame, lock
+    #continue getting new frames regardless of any clients
     while True:
         frame = stream.read()
         frame = imutils.resize(frame, width=800)
@@ -28,20 +29,18 @@ def update_frame():
 
 def serve_feed():
     global curr_frame, lock
-    # loop over frames from the output stream
+    # infite loop serving a stream
     while True:
-        # wait until the lock is acquired
         with lock:
-            # check if the output frame is available, otherwise skip
-            # the iteration of the loop
+            # if a frame is ready, go ahead
             if curr_frame is None:
                 continue
-            # encode the frame in JPEG format
+            # jpg encoding
             (flag, encodedImage) = cv2.imencode(".jpg", curr_frame)
-            # ensure the frame was successfully encoded
+            # if successful encoding yeild the frame
             if not flag:
                 continue
-        # yield the output frame in the byte format
+        # requires byte format
         yield b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + encodedImage.tobytes() + b"\r\n"
 
 
@@ -56,12 +55,9 @@ def video_feed():
 
 
 if __name__ == "__main__":
-    # start a thread that will perform motion detection
+    # starting thread capturing frames
     t = threading.Thread(target=update_frame)
     t.daemon = True
     t.start()
     # start the flask app
     app.run(host="0.0.0.0", port="8000", debug=True, threaded=True, use_reloader=False)
-
-
-stream.stop()
