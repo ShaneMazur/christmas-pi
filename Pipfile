@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 flask = "*"
 numpy = "*"
-opencv-contrib-python = "*"
+opencv-python = "*"
 imutils = "*"
 
 [dev-packages]

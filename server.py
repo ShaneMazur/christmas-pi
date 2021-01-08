@@ -45,10 +45,10 @@ def serve_feed():
         yield b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + encodedImage.tobytes() + b"\r\n"
 
 
-
 @app.route("/")
 def index():
     return render_template("index.html")
+
 
 @app.route("/video_feed")
 def video_feed():
