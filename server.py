@@ -88,12 +88,12 @@ def video_feed():
 
 
 @app.route("/motion")
-def index():
+def motion():
     return render_template("index.html")
 
 
 @app.route("/detected_feed")
-def video_feed():
+def detected_feed():
     return Response(
         serve_feed("motion"), mimetype="multipart/x-mixed-replace; boundary=frame"
     )
